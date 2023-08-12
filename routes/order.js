@@ -1,22 +1,29 @@
 import express from "express";
+import {
+  getAdminOrders,
+  getMyOrders,
+  getOrderDetails,
+  paymentVerification,
+  placeOrder,
+  placeOrderOnline,
+  processOrder,
+} from "../contollers/order.js";
 import { authorizeAdmin, isAuthenticated } from "../middlewares/auth.js";
-import { getAdminOrders, getMyOrders, getOrderDetails, paymentVerification, placeOrder, placeOrderOnline, processOrder } from "../contollers/order.js";
 
-const router =express.Router();
+const router = express.Router();
 
-router.post("/createorder",isAuthenticated,placeOrder);
-router.post("/createorderonline",isAuthenticated,placeOrderOnline);
-router.post("/paymentverification",isAuthenticated,paymentVerification);
+router.post("/createorder", isAuthenticated, placeOrder);
 
-router.get("/myorders",isAuthenticated,getMyOrders);
+router.post("/createorderonline", isAuthenticated, placeOrderOnline);
 
-router.get("/order/:id",isAuthenticated,getOrderDetails);
+router.post("/paymentverification", isAuthenticated, paymentVerification);
 
-//Add admin middleware
-router.get("/admin/orders",isAuthenticated,authorizeAdmin,getAdminOrders);
+router.get("/myorders", isAuthenticated, getMyOrders);
 
-router.get("/admin/order/:id",isAuthenticated,authorizeAdmin,processOrder);
+router.get("/order/:id", isAuthenticated, getOrderDetails);
+
+// Add Admin Middleware
+router.get("/admin/orders", isAuthenticated, authorizeAdmin, getAdminOrders);
+router.get("/admin/order/:id", isAuthenticated, authorizeAdmin, processOrder);
 
 export default router;
-
-

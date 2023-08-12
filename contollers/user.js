@@ -1,8 +1,8 @@
 import {asyncError} from "../middlewares/errorMiddleware.js"
 import {User} from "../models/User.js";
-import {Order} from "../models/order.js";
+import {Order} from "../models/Order.js";
 
-export const myprofile = (req,res,next)=>{
+export const myProfile = (req,res,next)=>{
     res.status(200).json({
         success:true,
         user:req.user,
@@ -16,7 +16,7 @@ export const logout = (req,res,next)=>{
             secure:process.env.NODE_ENV==="development"?false:true,
             httpOnly:process.env.NODE_ENV==="development"?false:true,
             sameSite:process.env.NODE_ENV==="development"?false:"none",
-        });
+        },cookie);
         res.status(200).json({
             message:"Logged Out",
         })
@@ -31,7 +31,7 @@ export const getAdminUsers=asyncError(async(req,res,next)=>{
     });
 });
 
-export const getAdminstats=asyncError(async(req,res,next)=>{
+export const getAdminStats=asyncError(async(req,res,next)=>{
     const usersCount=await User.countDocuments();
     const orders=await Order.find({});
     const prepairingOrders=orders.filter((i)=>i.orderStatus==="Preparing");

@@ -1,28 +1,36 @@
 import express from "express";
 import passport from "passport";
-import { getAdminUsers, getAdminstats, logout, myprofile } from "../contollers/user.js";
+import {
+  getAdminStats,
+  getAdminUsers,
+  logout,
+  myProfile,
+} from "../contollers/user.js";
 import { authorizeAdmin, isAuthenticated } from "../middlewares/auth.js";
 
+const router = express.Router();
 
-const router =express.Router();
+router.get(
+  "/googlelogin",
+  passport.authenticate("google", {
+    scope: ["profile"],
+  })
+);
 
-router.get("/googlelogin",passport.authenticate("google",{
-    scope:["profile"],
-}));
+router.get(
+  "/login",
+  passport.authenticate("google", {
+    successRedirect: process.env.FRONTEND_URL,
+  })
+);
 
-router.get("/login",passport.authenticate("google",{
-    successRedirect:process.env.FRONTEND_URL,
-}));
+router.get("/me", isAuthenticated, myProfile);
 
-router.get("/me",isAuthenticated,myprofile);
+router.get("/logout", logout);
 
-router.get("/logout",logout);
+// Admin Routes
+router.get("/admin/users", isAuthenticated, authorizeAdmin, getAdminUsers);
 
-//Admin route
-router.get("/admin/users",isAuthenticated,authorizeAdmin,getAdminUsers);
-
-
-
-router.get("/admin/stats",isAuthenticated,authorizeAdmin,getAdminstats)
+router.get("/admin/stats", isAuthenticated, authorizeAdmin, getAdminStats);
 
 export default router;
